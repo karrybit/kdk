@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: http-echo
-  namespace: default
+  namespace: http-echo
 spec:
   project: default
   source:

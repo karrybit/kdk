@@ -1,0 +1,19 @@
+version: 3
+
+set: [e, u, pipefail]
+
+tasks:
+  # pass-*:
+  #   desc: Show ArgoCD admin password
+  #   vars:
+  #     ENV: '{{index .MATCH 0}}'
+  #   cmds:
+  #     - task ctx:use-{{ .ENV}}
+  #     - kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+  pf-*:
+    desc: Port forward Kubernetes Dashboard
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task ctx:use-{{ .ENV}}
+      - kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443

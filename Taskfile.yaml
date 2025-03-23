@@ -4,13 +4,16 @@ set: [e, u, pipefail]
 
 includes:
   clst: .taskfiles/Taskfile.cluster.yaml
-  cgpt: .taskfiles/Taskfile.chatgpt.yaml
-  argo: .taskfiles/Taskfile.argocd.yaml
-  ctx: .taskfiles/Taskfile.context.yaml
-  helm: .taskfiles/Taskfile.helm.yaml
   k: .taskfiles/Taskfile.kubectl.yaml
+  ctx: .taskfiles/Taskfile.context.yaml
+  argo: .taskfiles/Taskfile.argocd.yaml
+  dashboard: .taskfiles/Taskfile.dashboard.yaml
+  helm: .taskfiles/Taskfile.helm.yaml
+  cgpt: .taskfiles/Taskfile.chatgpt.yaml
 
 tasks:
   default:
     desc: Print how to use `task` and command
     cmd: task --list-all
+
+    # kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
