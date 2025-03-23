@@ -2,4 +2,4 @@ resources:
   - ../../base
 
 patches:
-  - path: http-echo/patch.yaml
+  - path: patch.yaml
