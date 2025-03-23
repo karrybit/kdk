@@ -1,0 +1,6 @@
+resources:
+  - ../../base
+  - app-argocd.yaml
+  - app-kdk.yaml
+  - ingress-controller.yaml
+  - kubernetes-dashboard.yaml

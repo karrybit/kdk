@@ -1,0 +1,35 @@
+version: 3
+
+set: [e, u, pipefail]
+
+tasks:
+  apply-*:
+    desc: Apply ArgoCD
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task ctx:use-{{ .ENV}}
+      - kubectl create namespace argocd
+      - kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+  admin-password-*:
+    desc: Show ArgoCD admin password
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task ctx:use-{{ .ENV}}
+      - kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+  port-forward-*:
+    desc: Port forward ArgoCD
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task ctx:use-{{ .ENV}}
+      - kubectl port-forward svc/argocd-server -n argocd 8080:443
+  restart-*:
+    desc: Restart ArgoCD
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task ctx:use-{{ .ENV}}
+      - kubectl -n argocd rollout restart deployment argocd-repo-server
+      - kubectl -n argocd rollout status deployment argocd-repo-server

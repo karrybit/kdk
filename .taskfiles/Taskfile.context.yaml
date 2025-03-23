@@ -1,0 +1,15 @@
+version: 3
+
+set: [e, u, pipefail]
+
+tasks:
+  default:
+    desc: Show the current context
+    cmds:
+      - kubectl config view
+      - kubectl config get-contexts
+  use-*:
+    desc: Use the context
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmd: kubectl config use-context kind-kdk-{{ .ENV }}

@@ -1,0 +1,10 @@
+version: 3
+
+set: [e, u, pipefail]
+
+tasks:
+  pull:
+    desc: Pull the Helm chart
+    vars:
+      CHART: '{{index .CLI_ARGS 0}}'
+    cmd: helm pull {{ .CHART }} --untar

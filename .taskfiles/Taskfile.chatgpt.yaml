@@ -1,0 +1,29 @@
+version: 3
+
+set: [e, u, pipefail]
+
+tasks:
+  files:
+    desc: Share files to ChatGPT
+    vars:
+      DIR: "{{ .CLI_ARGS }}"
+    cmd: |
+      find {{ .DIR }} -type f | while read file; do
+        echo "===== $file ====="
+        cat "$file"
+        echo ""
+      done | pbcopy
+  now-*:
+    desc: Share
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task ctx:use-{{ .ENV}}
+      - kubectl get applications -n argocd
+      - argocd app list
+      - kubectl get events -n argocd --sort-by=.metadata.creationTimestamp | tail -20
+      - kubectl get ns
+      - kubectl get pods -A
+      - kubectl get svc -A
+      - kubectl get deployment -A
+      - kubectl get ingress -A

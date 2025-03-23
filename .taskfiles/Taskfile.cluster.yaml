@@ -1,0 +1,18 @@
+version: 3
+
+set: [e, u, pipefail]
+
+tasks:
+  create-*:
+    desc: Create a cluster
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - kind create cluster --config .config/kind/{{ .ENV }}.yaml
+      - task argo:apply-{{ .ENV }}
+      # - task: apply-kubernetes-dashboard-{{ .ENV }}
+  delete-*:
+    desc: Delete the cluster
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmd: kind delete cluster --name kdk-{{ .ENV }}

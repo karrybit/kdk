@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kdk-apps
+  namespace: default
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/karrybit/kdk.git
+    targetRevision: main
+    path: overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

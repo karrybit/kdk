@@ -1,0 +1,12 @@
+version: 3
+
+set: [e, u, pipefail]
+
+tasks:
+  apply-*:
+    desc: Apply the overlay
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task ctx:use-{{ .ENV}}
+      - kubectl apply -k overlays/{{ .ENV }}
