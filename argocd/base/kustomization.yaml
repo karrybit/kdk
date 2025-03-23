@@ -1,3 +1,4 @@
 resources:
   - argocd-cm.yaml
   - namespace.yaml
+  - rbac-http-echo.yaml
