@@ -1,6 +1,0 @@
-resources:
-  - ../../base
-  - http-echo
-
-patches:
-  - path: http-echo/patch.yaml

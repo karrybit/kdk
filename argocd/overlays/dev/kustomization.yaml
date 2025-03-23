@@ -1,6 +1,6 @@
 resources:
   - ../../base
   - app-argocd.yaml
-  - app-kdk.yaml
-  - ingress-controller.yaml
-  - kubernetes-dashboard.yaml
+  - app-http-echo.yaml
+  - app-ingress-nginx.yaml
+  - app-kubernetes-dashboard.yaml

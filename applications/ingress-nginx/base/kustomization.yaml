@@ -1,0 +1,3 @@
+resources:
+  - values.yaml
+  - http-echo-ingress.yaml

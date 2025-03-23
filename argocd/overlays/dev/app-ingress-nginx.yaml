@@ -11,7 +11,7 @@ spec:
       targetRevision: 4.10.0
       helm:
         valueFiles:
-          - $values/overlays/dev/ingress-controller/values.yaml
+          - $values/applications/ingress-nginx/overlays/dev/values.yaml
     - repoURL: https://github.com/karrybit/kdk.git
       targetRevision: main
       ref: values
