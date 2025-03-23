@@ -1,0 +1,79 @@
+version: 3
+
+set: [e, u, pipefail]
+
+tasks:
+  default:
+    desc: Print how to use `task` and command
+    cmds:
+      - task --list-all
+      - task: context
+  cluster-create-*:
+    desc: Create a cluster
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - kind create cluster --config config/kind/{{ .ENV }}.yaml
+      - task: apply-ingress-controller-{{ .ENV }}
+      - task: apply-kubernetes-dashboard-{{ .ENV }}
+      - task: apply-overlays-{{ .ENV }}
+  cluster-delete-*:
+    desc: Delete the cluster
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmd: kind delete cluster --name kdk-{{ .ENV }}
+  use-context-*:
+    desc: Use the context
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmd: kubectl config use-context kind-kdk-{{ .ENV }}
+  context:
+    desc: Show the current context
+    cmds:
+      - kubectl config view
+      - kubectl config get-contexts
+  apply-overlays-*:
+    desc: Apply the overlay
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task: use-context-{{ .ENV}}
+      - kubectl apply -k overlays/{{ .ENV }}
+  apply-ingress-controller-*:
+    desc: Apply the Ingress Controller
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task: use-context-{{ .ENV}}
+      - helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace -f overlays/{{ .ENV }}/ingress-controller/values.yaml
+      - kubectl wait deployment ingress-nginx-controller --namespace ingress-nginx --for=condition=Available --timeout=120s
+      # - kubectl rollout status deployment ingress-nginx-controller -n ingress-nginx --timeout=120s
+      - echo "Waiting for admission webhook..." && sleep 60
+  apply-argocd-*:
+    desc: Apply ArgoCD
+    vars:
+      ENV: '{{index .MATCH 0}}'
+    cmds:
+      - task: use-context-{{ .ENV}}
+      - kubectl create namespace argocd
+      - kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+  show-argocd-admin-password-*:
+    desc: Show ArgoCD admin password
+    cmds:
+      - task: use-context-{{ .ENV}}
+      - kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+  share-files:
+    desc: Share files to ChatGPT
+    vars:
+      DIR: "{{ .CLI_ARGS }}"
+    cmd: |
+      find {{ .DIR }} -type f | while read file; do
+        echo "===== $file ====="
+        cat "$file"
+        echo ""
+      done | pbcopy
+  helm-pull:
+    desc: Pull the Helm chart
+    vars:
+      CHART: '{{index .CLI_ARGS 0}}'
+    cmd: helm pull {{ .CHART }} --untar

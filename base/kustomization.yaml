@@ -1,0 +1,3 @@
+resources:
+  - http-echo
+  - nginx-ingress.yaml

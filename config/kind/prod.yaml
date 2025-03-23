@@ -1,0 +1,12 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: kdk-prod
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 32082
+        hostPort: 32082
+      - containerPort: 32445
+        hostPort: 32445
+      - containerPort: 32502
+        hostPort: 32502
